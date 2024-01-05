@@ -1,0 +1,12 @@
+.title-sm {
+  font-size: 1.5rem;
+}
+
+.title-lg {
+  font-size: 2rem;
+}
+
+.bar {
+  border: 1px dashed white;
+  margin: 0 auto;
+}

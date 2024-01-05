@@ -1,0 +1,11 @@
+.headerContainer {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.headerTitle {
+  font-size: 2em;
+  color: white;
+}

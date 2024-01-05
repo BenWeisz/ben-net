@@ -1,0 +1,50 @@
+name: Sample zxcv sdd
+
+-This is a section-
+
+# This is ignored
+
+***But what about the clock? The TinyFPGA*** board has a 16MHz clock but 640x480@60Hz ***requires*** a pixel clock of 25.125MHz, so we wouldn’t be able to toggle the sync pins fast enough to get the display into our desired mode.
+
+The FPGA has something called a Phase-locked Loop (PLL) which allows for turning a slow clock into a faster one. Using the icepll tool, we can generate a PLL module automatically, telling it that we have a 16MHz clock and want to get a 25.125MHz clock out of it.
+
+-New Section-
+
+$latex e^3$
+
+```C
+int main() {
+  int ccode = 0;
+}
+```
+
+We connect the physical FPGA pins that connect to the VGA connector (8 pins for color, 1 hsync pin, 1 vsync pin) and give vga_hsync and vga_vsync to the VGA module so that it can toggle them as necessary. vga_x and vga_y aren’t necessary to talking to a display, they’re just there so that when we want to draw we know which pixel is currently being drawn.
+
+That’s everything that’s needed to talk to a VGA display, so all that’s left is setting the color and seeing it on screen. For simplicity, we’ll just write a specific color when the X- and Y-coordinates are within a certain range, drawing a square. In this case, it will draw a red square in the middle and black everywhere else.
+
+We connect the physical FPGA pins that connect to the VGA connector (8 pins for color, 1 hsync pin, 1 vsync pin) and give vga_hsync and vga_vsync to the VGA module so that it can toggle them as necessary. vga_x and vga_y aren’t necessary to talking to a display, they’re just there so that when we want to draw we know which pixel is currently being drawn.
+
+That’s everything that’s needed to talk to a VGA display, so all that’s left is setting the color and seeing it on screen. For simplicity, we’ll just write a specific color when the X- and Y-coordinates are within a certain range, drawing a square. In this case, it will draw a red square in the middle and black everywhere else.
+
+We connect the physical FPGA pins that connect to the VGA connector (8 pins for color, 1 hsync pin, 1 vsync pin) and give vga_hsync and vga_vsync to the VGA module so that it can toggle them as necessary. vga_x and vga_y aren’t necessary to talking to a display, they’re just there so that when we want to draw we know which pixel is currently being drawn.
+
+That’s everything that’s needed to talk to a VGA display, so all that’s left is setting the color and seeing it on screen. For simplicity, we’ll just write a specific color when the X- and Y-coordinates are within a certain range, drawing a square. In this case, it will draw a red square in the middle and black everywhere else.
+
+We connect the physical FPGA pins that connect to the VGA connector (8 pins for color, 1 hsync pin, 1 vsync pin) and give vga_hsync and vga_vsync to the VGA module so that it can toggle them as necessary. vga_x and vga_y aren’t necessary to talking to a display, they’re just there so that when we want to draw we know which pixel is currently being drawn.
+
+That’s everything that’s needed to talk to a VGA display, so all that’s left is setting the color and seeing it on screen. For simplicity, we’ll just write a specific color when the X- and Y-coordinates are within a certain range, drawing a square. In this case, it will draw a red square in the middle and black everywhere else.
+
+We connect the physical FPGA pins that connect to the VGA connector (8 pins for color, 1 hsync pin, 1 vsync pin) and give vga_hsync and vga_vsync to the VGA module so that it can toggle them as necessary. vga_x and vga_y aren’t necessary to talking to a display, they’re just there so that when we want to draw we know which pixel is currently being drawn.
+
+That’s everything that’s needed to talk to a VGA display, so all that’s left is setting the color and seeing it on screen. For simplicity, we’ll just write a specific color when the X- and Y-coordinates are within a certain range, drawing a square. In this case, it will draw a red square in the middle and black everywhere else.
+
+We connect the physical FPGA pins that connect to the VGA connector (8 pins for color, 1 hsync pin, 1 vsync pin) and give vga_hsync and vga_vsync to the VGA module so that it can toggle them as necessary. vga_x and vga_y aren’t necessary to talking to a display, they’re just there so that when we want to draw we know which pixel is currently being drawn.
+
+That’s everything that’s needed to talk to a VGA display, so all that’s left is setting the color and seeing it on screen. For simplicity, we’ll just write a specific color when the X- and Y-coordinates are within a certain range, drawing a square. In this case, it will draw a red square in the middle and black everywhere else.
+
+-New Section asdf-
+
+- bullet 1
+- bullet 2
+- bullet 3
+- One more
