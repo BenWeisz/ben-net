@@ -1,7 +1,7 @@
 import React from "react";
 import Proptypes from "prop-types";
 
-import "katex/dist/katex.min.css";
+import "../../node_modules/katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 
 const LatexBlock = ({ block }) => {
