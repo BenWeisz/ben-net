@@ -9,18 +9,14 @@ import HomePageEntry from "../components/HomePageEntry";
 
 const HomePage = () => {
   return (
-    <div className="first-color">
+    <div className="primary-color">
       <Header />
       <div className="vert-container">
         <div className="vert-contents">
           <div style={{ padding: "1rem" }}>
             <h1 className="title-lg tert-color-text">Posts</h1>
             <hr className="bar" style={{ marginBottom: "0.5rem" }} />
-            <HomePageEntry
-              name="Sample zxcv sdd"
-              date="2024-01-05"
-              path="/sample-zxcv-sdd"
-            />
+            <HomePageEntry name="Post Title Goes Here" date="2024-01-30" path="/post-title-goes-here" />
             <hr className="bar" style={{ marginTop: "0.5rem" }} />
           </div>
         </div>
@@ -28,4 +24,6 @@ const HomePage = () => {
     </div>
   );
 };
+
 export default HomePage;
+        

@@ -1,0 +1,35 @@
+title: Post Title Goes Here
+
+# This line is ignored
+
+-This is a section-
+
+If you add any -Section- tags a section box will appear for the user to provide click navigation
+
+Paragrahs can be written
+on multiple lines and will
+appear as one paragraph on the post page.
+
+If you want to use latex, use the following notation:
+
+$e=mc^2$
+
+-This is yet another section-
+
+```C
+int main() {
+    int foo = 1000;
+    int bar = 2000;
+    // This is how you can write code blocks, it works with most languages
+    return 0;
+}
+```
+
+-Bullet Element Section-
+
+- This is a bullet element
+- And another
+- And yet another
+
+-Text inline elements-
+This is how you can ***bold*** a piece of text inline. This is an inline [Link](https://www.google.com/)
