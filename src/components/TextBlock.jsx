@@ -15,7 +15,7 @@ const TextBlock = ({ block }) => {
 
   // Generated via ChatGPT
   const parseStringWithLinks = (inputString) => {
-    const regex = /\[([^]+)\]\(([^)]+)\)/g; // [link name](https://www.google.com/)
+    const regex = /\[(.*?)\]\((.*?)\)/g; // [link name](https://www.google.com/)
     let output = [];
     let lastIndex = 0;
     let match;

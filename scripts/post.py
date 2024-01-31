@@ -67,7 +67,6 @@ class Post:
         state_machine = PostRawDataStateMachine()
         for line in post_raw_data_lines:
             state_machine.progress_state(line)
-        print(state_machine.data_store)
 
         # Grab all of the post blocks
         post_blocks = state_machine.get_data_store()

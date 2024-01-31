@@ -1,5 +1,5 @@
 import React from "react"
-import PostTitleGoesHerePage from "./PostTitleGoesHerePage";
+import DesigningABlogSitePage from "./DesigningABlogSitePage";
 import { useLocation } from "react-router-dom";
 
 import "../index.css";
@@ -10,7 +10,7 @@ import Header from "../components/Header";
 const PostPage = () => {
   const path = useLocation().pathname;
   const pages = {
-    "/post-title-goes-here": <PostTitleGoesHerePage/>,
+    "/designing-a-blog-site": <DesigningABlogSitePage/>,
   };
 
   const choosePage = () => {

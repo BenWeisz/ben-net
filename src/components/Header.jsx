@@ -9,7 +9,7 @@ const Header = () => {
     <div className="headerContainer">
       <div style={{ display: "flex", flexDirection: "column" }}>
         <Link to="/">
-          <h1 className="headerTitle">Ben Weisz</h1>
+          <h1 className="headerTitle">Ben (Bence) Weisz</h1>
         </Link>
         <div
           style={{
