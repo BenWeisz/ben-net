@@ -1,65 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Proptypes from "prop-types";
-import _ from "lodash";
+
+import Latex from "react-latex-next";
 
 import "../index.css";
-import "../style/text.css"
+import "../style/text.css";
 
 const TextBlock = ({ block }) => {
-  const [splitContent, setSplitContent] = useState([]);
+  const parseSubStrings = (inputString) => {
+    const components = [];
+    const regex =
+      /(\*\*\*[^*]*\*\*\*|\[[^\]]+\]\([^)]+\)|`[^`]+`|\$[^$]+\$|.)/g;
 
-  useEffect(() => {
-    const content = block.content.split("***");
-    setSplitContent(content.map((section) => ({ id: _.uniqueId(), section })));
-  }, [block.content]);
-
-  // Generated via ChatGPT
-  const parseStringWithLinks = (inputString) => {
-    const regex = /\[(.*?)\]\((.*?)\)/g; // [link name](https://www.google.com/)
-    let output = [];
-    let lastIndex = 0;
     let match;
-  
-    // Use regex to find patterns [text](http link) in the input string
+    let id = 0;
     while ((match = regex.exec(inputString)) !== null) {
-      // Add text before the match as plain text
-      output.push(<span key={lastIndex}>{inputString.substring(lastIndex, match.index)}</span>);
-  
-      // Add the link as an inline link
-      const text = match[1];
-      const link = match[2];
-      output.push(
-        <a class="link-block quat-color-text" key={match.index} href={link} target="_blank" rel="noopener noreferrer">
-          {text}
-        </a>
-      );
-  
-      // Update lastIndex to continue searching for the next match
-      lastIndex = match.index + match[0].length;
+      const matchStr = match[0];
+      if (matchStr.startsWith("***") && matchStr.endsWith("***")) {
+        components.push(
+          <strong key={id} className="quat-color-text">
+            {matchStr.substring(3, matchStr.length - 3)}
+          </strong>
+        );
+      } else if (matchStr.startsWith("[") && matchStr.endsWith(")")) {
+        const linkParts = matchStr
+          .substring(1, matchStr.length - 1)
+          .split("](");
+        components.push(
+          <a
+            class="link-block quat-color-text"
+            key={id}
+            href={linkParts[1]}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {linkParts[0]}
+          </a>
+        );
+      } else if (matchStr.startsWith("`") && matchStr.endsWith("`")) {
+        components.push(
+          <inlineblock>
+            {matchStr.substring(1, matchStr.length - 1)}
+          </inlineblock>
+        );
+      } else if (matchStr.startsWith("$") && matchStr.endsWith("$")) {
+        components.push(
+          <Latex>{matchStr}</Latex>
+        );
+      } else {
+        components.push(<span>{matchStr}</span>);
+      }
+      id += 1;
     }
-  
-    // Add the remaining text after the last match as plain text
-    output.push(<span key={lastIndex}>{inputString.substring(lastIndex)}</span>);
-  
-    // Wrap the segments in a paragraph tag
-    return <>{output}</>;
+
+    return <>{components}</>;
   };
 
   return (
     <div style={{ padding: "0.5rem 1rem 0.5rem 1rem" }} key={block.id}>
-      <p style={{ textIndent: "2rem" }}>
-        {splitContent.map((item, i) => {
-          if (i % 2 === 1) {
-            return (
-              <strong key={item.id} className="quat-color-text">
-                {item.section}
-              </strong>
-            );
-          } else {
-            return parseStringWithLinks(item.section);
-          }
-        })}
-      </p>
+      <p style={{ textIndent: "2rem" }}>{parseSubStrings(block.content)}</p>
     </div>
   );
 };

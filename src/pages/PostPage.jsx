@@ -1,5 +1,6 @@
 import React from "react"
 import DesigningABlogSitePage from "./DesigningABlogSitePage";
+import SymbolicDifferentiationPartPage from "./SymbolicDifferentiationPartPage";
 import { useLocation } from "react-router-dom";
 
 import "../index.css";
@@ -11,6 +12,7 @@ const PostPage = () => {
   const path = useLocation().pathname;
   const pages = {
     "/designing-a-blog-site": <DesigningABlogSitePage/>,
+    "/symbolic-differentiation-part-1": <SymbolicDifferentiationPartPage/>,
   };
 
   const choosePage = () => {
