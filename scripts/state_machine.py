@@ -32,10 +32,9 @@ class PostRawDataState(Enum):
     SECTION = 1
     COMMENT = 2
     TEXT = 3
-    LATEX = 4
-    CODE_START = 5
-    CODE_END = 6
-    BULLETS = 7
+    CODE_START = 4
+    CODE_END = 5
+    BULLETS = 6
 
 def post_raw_data_transition_func(curr_state: PostRawDataState, action: str, next_state: PostRawDataState, data_store: List):
     """ Return an updated data_store based on the current transition. """
@@ -44,8 +43,6 @@ def post_raw_data_transition_func(curr_state: PostRawDataState, action: str, nex
             return data_store + [{ "type": "section", "content": action[1:-1] }]
         elif next_state == PostRawDataState.TEXT:
             return data_store + [{ "type": "text", "content": action + " " }]
-        elif next_state == PostRawDataState.LATEX:
-            return data_store + [{ "type": "latex", "content": action}]
         elif next_state == PostRawDataState.CODE_START:
             return data_store + [{ "type": "code", "content": action[3:] + "\n"}]
         elif next_state == PostRawDataState.BULLETS:
@@ -70,8 +67,6 @@ def post_raw_data_action_func(curr_state: PostRawDataState, action: str) -> Post
             return PostRawDataState.SECTION
         elif action.startswith('#'):
             return PostRawDataState.COMMENT
-        elif action.startswith('$') and action.endswith('$'):
-            return PostRawDataState.LATEX
         elif action.startswith('- '):
             return PostRawDataState.BULLETS
         elif action.startswith('```'):

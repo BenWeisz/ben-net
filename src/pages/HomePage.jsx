@@ -16,8 +16,8 @@ const HomePage = () => {
           <div style={{ padding: "1rem" }}>
             <h1 className="title-lg tert-color-text">Posts</h1>
             <hr className="bar" style={{ marginBottom: "0.5rem" }} />
-            <HomePageEntry name="Designing a blog site" date="2024-01-30" path="/designing-a-blog-site" />
-<HomePageEntry name="Symbolic Differentiation: Part 1" date="2024-02-09" path="/symbolic-differentiation-part-1" />
+            <HomePageEntry name="Symbolic Differentiation: Part 1" date="2024-02-09" path="/symbolic-differentiation-part-1" />
+<HomePageEntry name="Designing a blog site" date="2024-01-30" path="/designing-a-blog-site" />
             <hr className="bar" style={{ marginTop: "0.5rem" }} />
           </div>
         </div>

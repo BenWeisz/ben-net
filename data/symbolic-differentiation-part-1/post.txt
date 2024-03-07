@@ -8,17 +8,17 @@ might write something like this:
 int x = 100;
 ```
 
-This expression lets us assign the a value to the program variable x. Any operation we perform with x now operates on the value that we've assigned to x (in this case 100).
-A symbolic view point of x would say that x can be any value, and that we will operate on x as such. Whatever manipulations we perform on x, or however we compose it with 
-other symbols, we will not assign it a value (at least for the time being). Every operation made on x is done with the understanding that x can take on any value. In this way
-x is not a variable in a programming sense but x ***is itself the value*** of a program variable representing a symbol in a mathematical expression / term. Later we will see
+This expression lets us assign a value to the program variable `x`. Any operation we perform with `x` now operates on the value that we've assigned to `x` (in this case `100`).
+A symbolic perspective of `x` would say that `x` can be any value, and that we will operate on `x` as such. Whatever manipulations we perform on `x`, or however we compose it with 
+other symbols, we will not assign it a value (at least for the time being). Every operation made on `x` is done with the understanding that `x` can take on any value. In this way
+`x` is not a variable in a programming sense but `x` ***is itself the value*** of a program variable representing a symbol in a mathematical expression / term. Later we will see
 the exact way we will represent this programmatically but it will look a little something like this:
 
 ```python
 var_x = Term(TermType.VAR, ["x"])
 ```
 
-In this way, var_x represents the mathematical symbol x, and we can program various operators which operate on var_x to represent mathematical operations on x itself.
+In this way, `var_x` represents the mathematical symbol $x$, and we can program various operators which operate on `var_x` to represent mathematical operations on $x$ itself.
 This leads us to the second part of ***Symbolic Differentiation***; differentiation. The main mathematical operation we will seek to represent is this mathematical operation.
 We will do this symbolically so as to allow us to compute the derivative of a given function for all inputs of its dependant variable.
 
@@ -26,46 +26,51 @@ We will do this symbolically so as to allow us to compute the derivative of a gi
 
 But first, what are operators? Operators are mathematical functions which we will represent symbolically in our program.
 
-You've probably seen a mathematical function in math class before. These include f(x), g(x), f(x, y) and so on. The ***arity*** of a function is the number of parameters it has.
-f(x) is of arity 1, f(x, y) is of arity 2. Functions like these will thus be represented as unary and binary operators. Additionally we will introduce the usage of 0 arity functions
+You've probably seen a mathematical function in math class before. These include $f(x), g(x), f(x, y)$ and so on. The ***arity*** of a function is the number of parameters it has.
+$f(x)$ is of arity $1, f(x, y)$ is of arity $2$. Functions like these will thus be represented as unary and binary operators. Additionally we will introduce the usage of $0$ arity functions
 through the use of constants.
 
-Zero Arity Operator (const):
+***Zero Arity Operator (constant):***
 
-- c(.) --> c
+-->c(·) → $c$
 
-Unary Operators:
+***Unary Operators:***
 
-- neg(x) --> -x
-- ln(x) --> ln(x)
-- sin(x) --> sin(x)
-- cos(x) --> cos(x)
-- tan(x) --> tan(x)
+-->neg(x) → $-x$
 
-Binary Operators:
+-->ln(x) → $ln(x)$
 
-- +(a, b) --> a + b
-- -(a, b) --> a - b
-- *(a, b) --> a x b
-- /(a, b) --> a / b
-- pow(a, b) --> a ^ b
+-->sin(x) → $sin(x)$
 
-For now we will only deal with a subset of these and will incorporate more in future posts:
+-->cos(x) → $cos(x)$
 
-Zero Arity Operator (const):
+-->tan(x) → $tan(x)$
 
-- c(.) --> c
+***Binary Operators:***
 
-Unary Operators:
+-->+(a, b) → $a + b$
 
-- neg(x) --> -x
+-->-(a, b) → $a - b$
 
-Binary Operators:
+-->$*$(a, b) → $a \times b$
 
-- +(a, b) --> a + b
-- -(a, b) --> a - b
-- *(a, b) --> a x b
-- /(a, b) --> a / b
+-->/(a, b) → $\frac{a}{b}$
+
+-->pow(a, b) → $a^b$
+
+***For now we will only deal with a subset of these and will incorporate more in future posts:***
+
+-->c(·) → $c$
+
+-->neg(x) → $-x$
+
+-->+(a, b) → $a + b$
+
+-->-(a, b) → $a - b$
+
+-->$*$(a, b) → $a \times b$
+
+-->/(a, b) → $\frac{a}{b}$
 
 In a matermatical sense we can compose these operators with the help of a brackets to unambiguosly represent complex mathematical
 expressions / terms.
@@ -78,7 +83,7 @@ Would be represented as:
 
 $f = /(*(+(x, c_1), -(x, c_2)),*(x, x))$
 
-Where x is a variable, and c1 and c2 are constants.
+Where x is a variable, and $c_1$ and $c_2$ are constants.
 
 -Formal Languages-
 
@@ -90,10 +95,11 @@ by using the set of formation rules in the language on the atomic terms. We will
 
 Our atomic terms will consist of constants and variables.
 
-- constants: 1, 2, 3, ...
-- variables: x, y, z, ...
+***Constants:*** 1, 2, 3, ...
 
-$$\mathcal{A} = constants \cup variables$$
+***Variables:*** x, y, z, ...
+
+$\mathcal{A} = constants \cup variables$
 
 Our formation rules will consist of the unary and binary operators we described previously. Let this set be:
 
@@ -105,11 +111,13 @@ $\mathcal{L} = \{A, R\}$
 
 In this language:
 
-$c \in \mathcal{L} where c \in \mathcal{A} is a constant$
-$x \in \mathcal{L} where x \in \mathcal{A} is a variable$
+-->$c \in \mathcal{L}$ where $c \in \mathcal{A}$ is a constant
 
-$if a \in \mathcal{L} and r \in \mathcal{R} is a unary operator then r(a) \in \mathcal{L}$
-$if a, b \in \mathcal{L} and r \in \mathcal{R} then r(a, b) \in \mathcal{L} for binary operator r$
+-->$x \in \mathcal{L}$ where $x \in \mathcal{A}$ is a variable
+
+-->if $a \in \mathcal{L}$ and $r \in \mathcal{R}$ is a unary operator then $r(a) \in \mathcal{L}$
+
+-->if $a, b \in \mathcal{L}$ and $r \in \mathcal{R}$ then $r(a, b) \in \mathcal{L}$ for binary operator $r$
 
 Then all $a \in \mathcal{L}$ are called terms and each of them that are not atomic have a recursive structure by construction.
 But what does a does it mean for a term to have a recursive structure? In this case a term is recursive if it is made up of other terms.
@@ -293,11 +301,17 @@ At its core differentiation is a set of rules that map terms in our formal langu
 Let's take a look at a few of the ones that you might remember from calculus class.
 
 $\frac{d}{dx}c = 0$
+
 $\frac{d}{dx}x = 1$
+
 $\frac{d}{dx}[f(x) + g(x)] = \frac{d}{dx}f(x) + \frac{d}{dx}g(x)$
+
 $\frac{d}{dx}[-f(x)] = -\frac{d}{dx}f(x)$
+
 $\frac{d}{dx}[f(x) - g(x)] = \frac{d}{dx}f(x) - \frac{d}{dx}g(x)$
+
 $\frac{d}{dx}[f(x) \cdot g(x)] = g(x) \cdot \frac{d}{dx}f(x) + f(x) \cdot \frac{d}{dx} g(x)$
+
 $\frac{d}{dx}\frac{f(x)}{g(x)} = \frac{g(x) \cdot \frac{d}{dx} f(x) - f(x) \cdot \frac{d}{dx}g(x)}{g(x) \cdot g(x)}$
 
 Where $c \in \mathcal{L}$ is a const and $f, g \in \mathcal{L}$ are terms.
@@ -363,24 +377,35 @@ of these rules which may be familiar.
 Let $a, b \in \mathcal{L}$ be constants and $f \in \mathcal{L}$ be compound term.
 
 $0 + f \rightarrow{} f$
+
 $f + 0 \rightarrow{} f$
+
 $f - 0 \rightarrow{} f$
+
 $0 - f \rightarrow{} -f$
+
 $0 \times f \rightarrow{} 0$
+
 $f \times 0 \rightarrow{} 0$
+
 $1 \times f \rightarrow{} f$
+
 $f \times 1 \rightarrow{} f$
+
 $0 \div f \rightarrow{} 0$
 
-$f \div 0 \rightarrow{} f \div 0$ print warning
+-->$f \div 0 \rightarrow{} f \div 0$ print warning
 
 $f \div 1 \rightarrow{} f$
 
-$f \div f \rightarrow{} f \div f$ print warning
+-->$f \div f \rightarrow{} f \div f$ print warning
 
 $a + b = compute(a + b)$
+
 $a - b = compute(a - b)$
+
 $a \times b = compute(a \times b)$
+
 $a \div b = compute(a \div b)$
 
 Some of these I've listed, but they would result in an error if you actually computed them. For example
@@ -402,4 +427,7 @@ rules we add a catch-all statment in case we can't simplify the current term. In
 sib terms and return a new term with the current term's type and the simplified arguments.
 
 ```python
+class Term:
 ```
+
+-Conclusion-

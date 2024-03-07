@@ -51,7 +51,6 @@ class Post:
             "section_block": 'import SectionBlock from "../components/SectionBlock";\n',
             "section_box": 'import SectionBox from "../components/SectionBox";\n',
             "text_block": 'import TextBlock from "../components/TextBlock";\n',
-            "latex_block": 'import LatexBlock from "../components/LatexBlock";\n',
             "code_block": 'import CodeBlock from "../components/CodeBlock";\n',
             "bullets_block": 'import BulletsBlock from "../components/BulletsBlock";\n',
             "lodash": 'import _ from "lodash";\n',
@@ -76,7 +75,6 @@ class Post:
         
         num_section_blocks = len(section_blocks)
         num_text_blocks = len(list(filter(lambda block: block["type"] == "text", post_blocks)))
-        num_latex_blocks = len(list(filter(lambda block: block["type"] == "latex", post_blocks)))
         num_bullets_blocks = len(list(filter(lambda block: block["type"] == "bullets", post_blocks)))
         num_code_blocks = len(list(filter(lambda block: block["type"] == "code", post_blocks)))
 
@@ -103,8 +101,6 @@ class Post:
             page_str += import_dict["section_box"]
         if num_text_blocks > 0:
             page_str += import_dict["text_block"]
-        if num_latex_blocks > 0:
-            page_str += import_dict["latex_block"]
         if num_bullets_blocks > 0:
             page_str += import_dict["bullets_block"]
         if num_code_blocks > 0:
@@ -162,8 +158,6 @@ class Post:
                 page_str += "\t\t\t\t\tid: _.uniqueId(),\n"
                 page_str += "\t\t\t\t}}\n"
                 page_str += "\t\t\t/>\n"
-            elif block_type == "latex":
-                page_str += "\t\t\t<LatexBlock block={{ content: \"" + escape_characters(block["content"]) + "\" }} />\n"
             elif block_type == "code":
                 content_lines = block["content"].split("\n")
                 language = content_lines[0]
@@ -383,7 +377,8 @@ const HomePage = () => {
         """.strip()
         home_page_str += "\n            "
 
-        for post in self.published_posts:
+        
+        for post in sorted(self.published_posts, key=lambda x: datetime.strptime(x.post_date, "%Y-%m-%d"), reverse=True):
             home_page_str += post.get_entry_str() + "\n"
         
         home_page_str += """

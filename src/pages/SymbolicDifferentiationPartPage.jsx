@@ -7,8 +7,6 @@ import "../style/contents.css";
 import SectionBlock from "../components/SectionBlock";
 import SectionBox from "../components/SectionBox";
 import TextBlock from "../components/TextBlock";
-import LatexBlock from "../components/LatexBlock";
-import BulletsBlock from "../components/BulletsBlock";
 import CodeBlock from "../components/CodeBlock";
 
 const SymbolicDifferentiationPartPage = () => {
@@ -22,9 +20,10 @@ const SymbolicDifferentiationPartPage = () => {
 		{ id: _.uniqueId(), content: "Pretty Printing"},
 		{ id: _.uniqueId(), content: "Differentiation"},
 		{ id: _.uniqueId(), content: "Simplifying Terms"},
+		{ id: _.uniqueId(), content: "Conclusion"},
 	];
 
-	const sectionRefs = useRef([null, null, null, null, null, null, null, null, null]);
+	const sectionRefs = useRef([null, null, null, null, null, null, null, null, null, null]);
 
 	return (
 		<div class="vert-contents">
@@ -57,7 +56,7 @@ const SymbolicDifferentiationPartPage = () => {
 			/>
 			<TextBlock
 				block={{
-					content: "This expression lets us assign the a value to the program variable x. Any operation we perform with x now operates on the value that we've assigned to x (in this case 100). A symbolic view point of x would say that x can be any value, and that we will operate on x as such. Whatever manipulations we perform on x, or however we compose it with  other symbols, we will not assign it a value (at least for the time being). Every operation made on x is done with the understanding that x can take on any value. In this way x is not a variable in a programming sense but x ***is itself the value*** of a program variable representing a symbol in a mathematical expression / term. Later we will see the exact way we will represent this programmatically but it will look a little something like this:  ",
+					content: "This expression lets us assign a value to the program variable `x`. Any operation we perform with `x` now operates on the value that we've assigned to `x` (in this case `100`). A symbolic perspective of `x` would say that `x` can be any value, and that we will operate on `x` as such. Whatever manipulations we perform on `x`, or however we compose it with  other symbols, we will not assign it a value (at least for the time being). Every operation made on `x` is done with the understanding that `x` can take on any value. In this way `x` is not a variable in a programming sense but `x` ***is itself the value*** of a program variable representing a symbol in a mathematical expression / term. Later we will see the exact way we will represent this programmatically but it will look a little something like this:  ",
 					id: _.uniqueId(),
 				}}
 			/>
@@ -69,7 +68,7 @@ const SymbolicDifferentiationPartPage = () => {
 			/>
 			<TextBlock
 				block={{
-					content: "In this way, var_x represents the mathematical symbol x, and we can program various operators which operate on var_x to represent mathematical operations on x itself. This leads us to the second part of ***Symbolic Differentiation***; differentiation. The main mathematical operation we will seek to represent is this mathematical operation. We will do this symbolically so as to allow us to compute the derivative of a given function for all inputs of its dependant variable.  ",
+					content: "In this way, `var_x` represents the mathematical symbol $x$, and we can program various operators which operate on `var_x` to represent mathematical operations on $x$ itself. This leads us to the second part of ***Symbolic Differentiation***; differentiation. The main mathematical operation we will seek to represent is this mathematical operation. We will do this symbolically so as to allow us to compute the derivative of a given function for all inputs of its dependant variable.  ",
 					id: _.uniqueId(),
 				}}
 			/>
@@ -89,103 +88,134 @@ const SymbolicDifferentiationPartPage = () => {
 			/>
 			<TextBlock
 				block={{
-					content: "You've probably seen a mathematical function in math class before. These include f(x), g(x), f(x, y) and so on. The ***arity*** of a function is the number of parameters it has. f(x) is of arity 1, f(x, y) is of arity 2. Functions like these will thus be represented as unary and binary operators. Additionally we will introduce the usage of 0 arity functions through the use of constants.  ",
+					content: "You've probably seen a mathematical function in math class before. These include $f(x), g(x), f(x, y)$ and so on. The ***arity*** of a function is the number of parameters it has. $f(x)$ is of arity $1, f(x, y)$ is of arity $2$. Functions like these will thus be represented as unary and binary operators. Additionally we will introduce the usage of $0$ arity functions through the use of constants.  ",
 					id: _.uniqueId(),
 				}}
 			/>
 			<TextBlock
 				block={{
-					content: "Zero Arity Operator (const):  ",
-					id: _.uniqueId(),
-				}}
-			/>
-			<BulletsBlock
-				block={{
-					content: [
-						{ item: "c(.) --> c", id: _.uniqueId() },
-					],
-				}}
-			/>
-			<TextBlock
-				block={{
-					content: "Unary Operators:  ",
-					id: _.uniqueId(),
-				}}
-			/>
-			<BulletsBlock
-				block={{
-					content: [
-						{ item: "neg(x) --> -x", id: _.uniqueId() },
-						{ item: "ln(x) --> ln(x)", id: _.uniqueId() },
-						{ item: "sin(x) --> sin(x)", id: _.uniqueId() },
-						{ item: "cos(x) --> cos(x)", id: _.uniqueId() },
-						{ item: "tan(x) --> tan(x)", id: _.uniqueId() },
-					],
-				}}
-			/>
-			<TextBlock
-				block={{
-					content: "Binary Operators:  ",
-					id: _.uniqueId(),
-				}}
-			/>
-			<BulletsBlock
-				block={{
-					content: [
-						{ item: "+(a, b) --> a + b", id: _.uniqueId() },
-						{ item: "-(a, b) --> a - b", id: _.uniqueId() },
-						{ item: "*(a, b) --> a x b", id: _.uniqueId() },
-						{ item: "/(a, b) --> a / b", id: _.uniqueId() },
-						{ item: "pow(a, b) --> a ^ b", id: _.uniqueId() },
-					],
-				}}
-			/>
-			<TextBlock
-				block={{
-					content: "For now we will only deal with a subset of these and will incorporate more in future posts:  ",
+					content: "***Zero Arity Operator (constant):***  ",
 					id: _.uniqueId(),
 				}}
 			/>
 			<TextBlock
 				block={{
-					content: "Zero Arity Operator (const):  ",
+					content: "-->c(·) → $c$  ",
 					id: _.uniqueId(),
-				}}
-			/>
-			<BulletsBlock
-				block={{
-					content: [
-						{ item: "c(.) --> c", id: _.uniqueId() },
-					],
 				}}
 			/>
 			<TextBlock
 				block={{
-					content: "Unary Operators:  ",
+					content: "***Unary Operators:***  ",
 					id: _.uniqueId(),
-				}}
-			/>
-			<BulletsBlock
-				block={{
-					content: [
-						{ item: "neg(x) --> -x", id: _.uniqueId() },
-					],
 				}}
 			/>
 			<TextBlock
 				block={{
-					content: "Binary Operators:  ",
+					content: "-->neg(x) → $-x$  ",
 					id: _.uniqueId(),
 				}}
 			/>
-			<BulletsBlock
+			<TextBlock
 				block={{
-					content: [
-						{ item: "+(a, b) --> a + b", id: _.uniqueId() },
-						{ item: "-(a, b) --> a - b", id: _.uniqueId() },
-						{ item: "*(a, b) --> a x b", id: _.uniqueId() },
-						{ item: "/(a, b) --> a / b", id: _.uniqueId() },
-					],
+					content: "-->ln(x) → $ln(x)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->sin(x) → $sin(x)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->cos(x) → $cos(x)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->tan(x) → $tan(x)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "***Binary Operators:***  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->+(a, b) → $a + b$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->-(a, b) → $a - b$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->$*$(a, b) → $a \\times b$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->/(a, b) → $\\frac{a}{b}$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->pow(a, b) → $a^b$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "***For now we will only deal with a subset of these and will incorporate more in future posts:***  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->c(·) → $c$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->neg(x) → $-x$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->+(a, b) → $a + b$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->-(a, b) → $a - b$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->$*$(a, b) → $a \\times b$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->/(a, b) → $\\frac{a}{b}$  ",
+					id: _.uniqueId(),
 				}}
 			/>
 			<TextBlock
@@ -200,17 +230,27 @@ const SymbolicDifferentiationPartPage = () => {
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$f = \\frac{(x + c_1)(x - c_2)}{x \\cdot x}$" }} />
+			<TextBlock
+				block={{
+					content: "$f = \\frac{(x + c_1)(x - c_2)}{x \\cdot x}$  ",
+					id: _.uniqueId(),
+				}}
+			/>
 			<TextBlock
 				block={{
 					content: "Would be represented as:  ",
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$f = /(*(+(x, c_1), -(x, c_2)),*(x, x))$" }} />
 			<TextBlock
 				block={{
-					content: "Where x is a variable, and c1 and c2 are constants.  ",
+					content: "$f = /(*(+(x, c_1), -(x, c_2)),*(x, x))$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "Where x is a variable, and $c_1$ and $c_2$ are constants.  ",
 					id: _.uniqueId(),
 				}}
 			/>
@@ -240,39 +280,78 @@ const SymbolicDifferentiationPartPage = () => {
 					id: _.uniqueId(),
 				}}
 			/>
-			<BulletsBlock
+			<TextBlock
 				block={{
-					content: [
-						{ item: "constants: 1, 2, 3, ...", id: _.uniqueId() },
-						{ item: "variables: x, y, z, ...", id: _.uniqueId() },
-					],
+					content: "***Constants:*** 1, 2, 3, ...  ",
+					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$$\\mathcal{A} = constants \\cup variables$$" }} />
+			<TextBlock
+				block={{
+					content: "***Variables:*** x, y, z, ...  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$\\mathcal{A} = constants \\cup variables$  ",
+					id: _.uniqueId(),
+				}}
+			/>
 			<TextBlock
 				block={{
 					content: "Our formation rules will consist of the unary and binary operators we described previously. Let this set be:  ",
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$\\mathcal{R} = \\{+, -, *, /\\}$" }} />
+			<TextBlock
+				block={{
+					content: "$\\mathcal{R} = \\{+, -, *, /\\}$  ",
+					id: _.uniqueId(),
+				}}
+			/>
 			<TextBlock
 				block={{
 					content: "This then defines our language:  ",
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$\\mathcal{L} = \\{A, R\\}$" }} />
+			<TextBlock
+				block={{
+					content: "$\\mathcal{L} = \\{A, R\\}$  ",
+					id: _.uniqueId(),
+				}}
+			/>
 			<TextBlock
 				block={{
 					content: "In this language:  ",
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$c \\in \\mathcal{L} where c \\in \\mathcal{A} is a constant$" }} />
-			<LatexBlock block={{ content: "$x \\in \\mathcal{L} where x \\in \\mathcal{A} is a variable$" }} />
-			<LatexBlock block={{ content: "$if a \\in \\mathcal{L} and r \\in \\mathcal{R} is a unary operator then r(a) \\in \\mathcal{L}$" }} />
-			<LatexBlock block={{ content: "$if a, b \\in \\mathcal{L} and r \\in \\mathcal{R} then r(a, b) \\in \\mathcal{L} for binary operator r$" }} />
+			<TextBlock
+				block={{
+					content: "-->$c \\in \\mathcal{L}$ where $c \\in \\mathcal{A}$ is a constant  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->$x \\in \\mathcal{L}$ where $x \\in \\mathcal{A}$ is a variable  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->if $a \\in \\mathcal{L}$ and $r \\in \\mathcal{R}$ is a unary operator then $r(a) \\in \\mathcal{L}$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->if $a, b \\in \\mathcal{L}$ and $r \\in \\mathcal{R}$ then $r(a, b) \\in \\mathcal{L}$ for binary operator $r$  ",
+					id: _.uniqueId(),
+				}}
+			/>
 			<TextBlock
 				block={{
 					content: "Then all $a \\in \\mathcal{L}$ are called terms and each of them that are not atomic have a recursive structure by construction. But what does a does it mean for a term to have a recursive structure? In this case a term is recursive if it is made up of other terms.  ",
@@ -351,7 +430,12 @@ const SymbolicDifferentiationPartPage = () => {
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$f = /(*(+(x, c_1), -(x, c_2)),*(x, x))$" }} />
+			<TextBlock
+				block={{
+					content: "$f = /(*(+(x, c_1), -(x, c_2)),*(x, x))$  ",
+					id: _.uniqueId(),
+				}}
+			/>
 			<TextBlock
 				block={{
 					content: "Programatically we can represent this as follows:  ",
@@ -494,13 +578,48 @@ const SymbolicDifferentiationPartPage = () => {
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$\\frac{d}{dx}c = 0$" }} />
-			<LatexBlock block={{ content: "$\\frac{d}{dx}x = 1$" }} />
-			<LatexBlock block={{ content: "$\\frac{d}{dx}[f(x) + g(x)] = \\frac{d}{dx}f(x) + \\frac{d}{dx}g(x)$" }} />
-			<LatexBlock block={{ content: "$\\frac{d}{dx}[-f(x)] = -\\frac{d}{dx}f(x)$" }} />
-			<LatexBlock block={{ content: "$\\frac{d}{dx}[f(x) - g(x)] = \\frac{d}{dx}f(x) - \\frac{d}{dx}g(x)$" }} />
-			<LatexBlock block={{ content: "$\\frac{d}{dx}[f(x) \\cdot g(x)] = g(x) \\cdot \\frac{d}{dx}f(x) + f(x) \\cdot \\frac{d}{dx} g(x)$" }} />
-			<LatexBlock block={{ content: "$\\frac{d}{dx}\\frac{f(x)}{g(x)} = \\frac{g(x) \\cdot \\frac{d}{dx} f(x) - f(x) \\cdot \\frac{d}{dx}g(x)}{g(x) \\cdot g(x)}$" }} />
+			<TextBlock
+				block={{
+					content: "$\\frac{d}{dx}c = 0$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$\\frac{d}{dx}x = 1$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$\\frac{d}{dx}[f(x) + g(x)] = \\frac{d}{dx}f(x) + \\frac{d}{dx}g(x)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$\\frac{d}{dx}[-f(x)] = -\\frac{d}{dx}f(x)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$\\frac{d}{dx}[f(x) - g(x)] = \\frac{d}{dx}f(x) - \\frac{d}{dx}g(x)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$\\frac{d}{dx}[f(x) \\cdot g(x)] = g(x) \\cdot \\frac{d}{dx}f(x) + f(x) \\cdot \\frac{d}{dx} g(x)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$\\frac{d}{dx}\\frac{f(x)}{g(x)} = \\frac{g(x) \\cdot \\frac{d}{dx} f(x) - f(x) \\cdot \\frac{d}{dx}g(x)}{g(x) \\cdot g(x)}$  ",
+					id: _.uniqueId(),
+				}}
+			/>
 			<TextBlock
 				block={{
 					content: "Where $c \\in \\mathcal{L}$ is a const and $f, g \\in \\mathcal{L}$ are terms.  ",
@@ -563,32 +682,102 @@ const SymbolicDifferentiationPartPage = () => {
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$0 + f \\rightarrow{} f$" }} />
-			<LatexBlock block={{ content: "$f + 0 \\rightarrow{} f$" }} />
-			<LatexBlock block={{ content: "$f - 0 \\rightarrow{} f$" }} />
-			<LatexBlock block={{ content: "$0 - f \\rightarrow{} -f$" }} />
-			<LatexBlock block={{ content: "$0 \\times f \\rightarrow{} 0$" }} />
-			<LatexBlock block={{ content: "$f \\times 0 \\rightarrow{} 0$" }} />
-			<LatexBlock block={{ content: "$1 \\times f \\rightarrow{} f$" }} />
-			<LatexBlock block={{ content: "$f \\times 1 \\rightarrow{} f$" }} />
-			<LatexBlock block={{ content: "$0 \\div f \\rightarrow{} 0$" }} />
 			<TextBlock
 				block={{
-					content: "$f \\div 0 \\rightarrow{} f \\div 0$ print warning  ",
+					content: "$0 + f \\rightarrow{} f$  ",
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$f \\div 1 \\rightarrow{} f$" }} />
 			<TextBlock
 				block={{
-					content: "$f \\div f \\rightarrow{} f \\div f$ print warning  ",
+					content: "$f + 0 \\rightarrow{} f$  ",
 					id: _.uniqueId(),
 				}}
 			/>
-			<LatexBlock block={{ content: "$a + b = compute(a + b)$" }} />
-			<LatexBlock block={{ content: "$a - b = compute(a - b)$" }} />
-			<LatexBlock block={{ content: "$a \\times b = compute(a \\times b)$" }} />
-			<LatexBlock block={{ content: "$a \\div b = compute(a \\div b)$" }} />
+			<TextBlock
+				block={{
+					content: "$f - 0 \\rightarrow{} f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$0 - f \\rightarrow{} -f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$0 \\times f \\rightarrow{} 0$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$f \\times 0 \\rightarrow{} 0$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$1 \\times f \\rightarrow{} f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$f \\times 1 \\rightarrow{} f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$0 \\div f \\rightarrow{} 0$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->$f \\div 0 \\rightarrow{} f \\div 0$ print warning  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$f \\div 1 \\rightarrow{} f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "-->$f \\div f \\rightarrow{} f \\div f$ print warning  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$a + b = compute(a + b)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$a - b = compute(a - b)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$a \\times b = compute(a \\times b)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$a \\div b = compute(a \\div b)$  ",
+					id: _.uniqueId(),
+				}}
+			/>
 			<TextBlock
 				block={{
 					content: "Some of these I've listed, but they would result in an error if you actually computed them. For example dividing by zero has no meaning. When we encounter such a simplification we will print a warning message to the user and return the same term as its simplification.  ",
@@ -616,11 +805,19 @@ const SymbolicDifferentiationPartPage = () => {
 			<CodeBlock
 				block={{
 					language: "python",
-					content: "",
+					content: "class Term:",
 				}}
 			/>
+			<SectionBlock
+				ref={(el) => {
+					sectionRefs.current[9] = el;
+				}}
+				key={sections[9].id}
+				title={sections[9].content}
+				upper={null}
+			/>
 			<p style={{ textAlign: "center", padding: "2rem"}}>
-				Last Updated {"2024-02-16"}
+				Last Updated {"2024-03-07"}
 			</p>
 		</div>
 	);

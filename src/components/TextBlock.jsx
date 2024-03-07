@@ -1,22 +1,38 @@
 import React from "react";
 import Proptypes from "prop-types";
 
-import Latex from "react-latex-next";
+import { InlineMath, BlockMath } from "./Latex";
 
 import "../index.css";
 import "../style/text.css";
 
 const TextBlock = ({ block }) => {
-  const parseSubStrings = (inputString) => {
+  const parseSubStrings = (rawString) => {
     const components = [];
-    const regex =
-      /(\*\*\*[^*]*\*\*\*|\[[^\]]+\]\([^)]+\)|`[^`]+`|\$[^$]+\$|.)/g;
+    let inputString = rawString.replace(/\s+$/g, '');
+
+    // Handle case were this line is only a latex block
+    if (inputString.split("$").length - 1 === 2 && inputString.startsWith("$") && inputString.endsWith("$")) {
+      return { component: < BlockMath math = { inputString.slice(1, inputString.length - 1) } />, shouldCenter: false };
+    }
+
+    // Mark this text block to be centered
+    const shouldCenter = inputString.startsWith("-->");
+    if (shouldCenter) {
+      inputString = inputString.slice(3, inputString.length);
+    }
+
+    // const regex = /(\*\*\*[^*]*\*\*\*|\[[^\]]+\]\([^)]+\)|`[^`]+`|\$[^$]+\$|[^*\[\]`$]+|\*\*\*[^\*]+\*\*\*)/g;
+    const regex = /(\*\*\*[^*]*\*\*\*|\[[^\]]+\]\([^)]+\)|`[^`]+`|\$[^$]+\$|[^*[\]`$]+|\*\*\*[^*]+\*\*\*)/g;
 
     let match;
     let id = 0;
     while ((match = regex.exec(inputString)) !== null) {
       const matchStr = match[0];
-      if (matchStr.startsWith("***") && matchStr.endsWith("***")) {
+      if (matchStr === "") {
+        continue;
+      }
+      else if (matchStr.startsWith("***") && matchStr.endsWith("***")) {
         components.push(
           <strong key={id} className="quat-color-text">
             {matchStr.substring(3, matchStr.length - 3)}
@@ -44,21 +60,23 @@ const TextBlock = ({ block }) => {
           </inlineblock>
         );
       } else if (matchStr.startsWith("$") && matchStr.endsWith("$")) {
-        components.push(
-          <Latex>{matchStr}</Latex>
-        );
+        const mathText = matchStr.slice(1, matchStr.length - 1);
+        components.push( <InlineMath math={mathText} />);
       } else {
         components.push(<span>{matchStr}</span>);
       }
       id += 1;
     }
 
-    return <>{components}</>;
+    return { component: <>{components}</>, shouldCenter };
   };
 
+  const parsedStrings = parseSubStrings(block.content);
+  const style = parsedStrings.shouldCenter ? { padding: "0.5rem 1rem 0.5rem 1rem", textAlign: "center" } : { padding: "0.5rem 1rem 0.5rem 1rem" };
+
   return (
-    <div style={{ padding: "0.5rem 1rem 0.5rem 1rem" }} key={block.id}>
-      <p style={{ textIndent: "2rem" }}>{parseSubStrings(block.content)}</p>
+    <div style={style} key={block.id}>
+      <p style={{ textIndent: "2rem" }}>{parsedStrings.component}</p>
     </div>
   );
 };
