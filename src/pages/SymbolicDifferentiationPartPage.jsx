@@ -20,10 +20,9 @@ const SymbolicDifferentiationPartPage = () => {
 		{ id: _.uniqueId(), content: "Pretty Printing"},
 		{ id: _.uniqueId(), content: "Differentiation"},
 		{ id: _.uniqueId(), content: "Simplifying Terms"},
-		{ id: _.uniqueId(), content: "Conclusion"},
 	];
 
-	const sectionRefs = useRef([null, null, null, null, null, null, null, null, null, null]);
+	const sectionRefs = useRef([null, null, null, null, null, null, null, null, null]);
 
 	return (
 		<div class="vert-contents">
@@ -678,7 +677,7 @@ const SymbolicDifferentiationPartPage = () => {
 			/>
 			<TextBlock
 				block={{
-					content: "Let $a, b \\in \\mathcal{L}$ be constants and $f \\in \\mathcal{L}$ be compound term.  ",
+					content: "Let $a, b \\in \\mathcal{L}$ be constants and $f, g \\in \\mathcal{L}$ be compound term.  ",
 					id: _.uniqueId(),
 				}}
 			/>
@@ -703,6 +702,12 @@ const SymbolicDifferentiationPartPage = () => {
 			<TextBlock
 				block={{
 					content: "$0 - f \\rightarrow{} -f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$f - f \\rightarrow 0$  ",
 					id: _.uniqueId(),
 				}}
 			/>
@@ -786,7 +791,7 @@ const SymbolicDifferentiationPartPage = () => {
 			/>
 			<TextBlock
 				block={{
-					content: "We also won't be simplifying terms where one term is divided by the same term. This would patch over a discontinuities when the denominator is 0 and the derivative doesn't exist.  ",
+					content: "We also won't be simplifying terms where a sub term is divided by the same subterm. This would patch over discontinuities when the denominator is 0 and the derivative doesn't exist.  ",
 					id: _.uniqueId(),
 				}}
 			/>
@@ -798,26 +803,84 @@ const SymbolicDifferentiationPartPage = () => {
 			/>
 			<TextBlock
 				block={{
-					content: "A key note about some of the simplification rules that we dfine above. You'll notice that some of these rules are symmetric: having the same result when we swap the arguments in our simplification rule. We'll have to  handle both of the case if we want to get nicely simplified terms. After implementing all the simplification rules we add a catch-all statment in case we can't simplify the current term. In this case we'll simplify the sib terms and return a new term with the current term's type and the simplified arguments.  ",
+					content: "A key note about some of the simplification rules that we dfine above. You'll notice that some of these rules are symmetric: having the same result when we swap the arguments in our simplification rule. We'll have to  handle both of the case if we want to get nicely simplified terms. After implementing all the simplification rules we add a catch-all statment in case we can't simplify the current term. In this case we'll simplify the sub terms and return a new term with the current term's type and the simplified arguments.  ",
 					id: _.uniqueId(),
 				}}
 			/>
 			<CodeBlock
 				block={{
 					language: "python",
-					content: "class Term:",
+					content: "class Term:\n    ...\n    def simp(self):\n        \"\"\" Simplify this Term if possible. \"\"\"        \n        if self.type == TermType.CONST:\n            return self\n        elif self.type == TermType.VAR:\n            return self\n        \n        simp_args = [arg.simp() for arg in self.args]\n        simp_types = [arg.type for arg in simp_args]\n        simp_values = [float(simp_args[i].args[0]) if simp_types[i] == TermType.CONST else simp_args[i] for i in range(len(simp_args))]\n\n        if self.type == TermType.ADD:\n            if simp_types[0] == TermType.CONST and simp_types[1] == TermType.CONST:\n                return Term(TermType.CONST, [str(simp_values[0] + simp_values[1])])\n            elif simp_types[0] == TermType.CONST and simp_values[0] == 0:\n                return simp_args[1]\n            elif simp_types[1] == TermType.CONST and simp_values[1] == 0:\n                return simp_args[0]\n        elif self.type == TermType.SUB:\n            if simp_types[0] == TermType.CONST and simp_types[1] == TermType.CONST:\n                return Term(TermType.CONST, [str(simp_values[0] - simp_values[1])])\n            elif simp_types[0] == TermType.CONST and simp_values[0] == 0:\n                return Term(TermType.NEG, [simp_args[1]])\n            elif simp_types[1] == TermType.CONST and simp_values[1] == 0:\n                return simp_args[0]\n            elif str(simp_args[0]) == str(simp_args[1]):\n                return Term(TermType.CONST, [\"0\"])\n        elif self.type == TermType.MUL:\n            if simp_types[0] == TermType.CONST and simp_types[1] == TermType.CONST:\n                return Term(TermType.CONST, [str(simp_values[0] * simp_values[1])])\n            elif simp_types[0] == TermType.CONST:\n                if simp_values[0] == 0:\n                    return Term(TermType.CONST, [\"0\"])\n                elif simp_values[0] == 1:\n                    return simp_args[1]\n            elif simp_types[1] == TermType.CONST:\n                if simp_values[1] == 0:\n                    return Term(TermType.CONST, [\"0\"])\n                elif simp_values[1] == 1:\n                    return simp_args[0]\n        elif self.type == TermType.DIV:\n            if simp_types[0] == TermType.CONST and simp_types[1] == TermType.CONST:\n                if simp_values[1] != 0:\n                    return Term(TermType.CONST, [str(simp_values[0] / simp_values[1])])\n                # Return handled by catch-all\n                print(\"Warning: Constant-Constant division by zero.\")\n            elif simp_types[0] == TermType.CONST and simp_values[0] == 0:\n                return Term(TermType.CONST, [\"0\"])\n            elif simp_types[1] == TermType.CONST:\n                if simp_values[1] == 0:\n                    print(\"Warning: Constant-Term division by zero.\")\n                elif simp_values[1] == 1:\n                    return simp_args[0]\n            elif str(simp_args[0]) == str(simp_args[1]):\n                print(f\"Warning: Not simplifying discontinuity @ 0={simp_args[0]}\")\n                \n        return Term(self.type, simp_args)",
 				}}
 			/>
-			<SectionBlock
-				ref={(el) => {
-					sectionRefs.current[9] = el;
+			<TextBlock
+				block={{
+					content: "This certainly goes a long way from turning `Term`'s like:  ",
+					id: _.uniqueId(),
 				}}
-				key={sections[9].id}
-				title={sections[9].content}
-				upper={null}
+			/>
+			<CodeBlock
+				block={{
+					language: "python",
+					content: ">>> (((((((((((((((0 + 0) * (x - 3)) + ((0 + 0) * (1 - 0))) + (((0 + 0) * (1 - 0)) + \n    ((1 + 0) * (0 - 0)))) + ((((0 + 0) * (1 - 0)) + ((1 + 0) * (0 - 0))) + (((1 + 0) * \n    (0 - 0)) + ((x + 2) * (0 - 0))))) * (x * x)) + (((((0 + 0) * (x - 3)) + ((1 + 0) * (1 - 0))) + \n    (((1 + 0) * (1 - 0)) + ((x + 2) * (0 - 0)))) * ((1 * x) + (x * 1)))) + ((((((0 + 0) * (x - 3)) + \n    ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + ((x + 2) * (0 - 0)))) * ((1 * x) + (x * 1))) + \n    ((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * (((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0)))))) - \n    (((((((0 + 0) * (x - 3)) + ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + ((x + 2) * (0 - 0)))) * \n    ((1 * x) + (x * 1))) + ((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * (((0 * x) + (1 * 1)) + \n    ((1 * 1) + (x * 0))))) + (((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * (((0 * x) + (1 * 1)) + \n    ((1 * 1) + (x * 0)))) + (((x + 2) * (x - 3)) * ((((0 * x) + (0 * 1)) + ((0 * 1) + (1 * 0))) + \n    (((0 * 1) + (1 * 0)) + ((1 * 0) + (x * 0)))))))) * ((x * x) * (x * x))) + ((((((((0 + 0) * (x - 3)) + \n    ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + ((x + 2) * (0 - 0)))) * (x * x)) + ((((1 + 0) * \n    (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + (x * 1)))) - (((((1 + 0) * (x - 3)) + ((x + 2) * \n    (1 - 0))) * ((1 * x) + (x * 1))) + (((x + 2) * (x - 3)) * (((0 * x) + (1 * 1)) + ((1 * 1) + \n    (x * 0)))))) * ((((1 * x) + (x * 1)) * (x * x)) + ((x * x) * ((1 * x) + (x * 1)))))) - \n    (((((((((0 + 0) * (x - 3)) + ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + ((x + 2) * \n    (0 - 0)))) * (x * x)) + ((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + (x * 1)))) - \n    (((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + (x * 1))) + (((x + 2) * (x - 3)) * \n    (((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0)))))) * ((((1 * x) + (x * 1)) * (x * x)) + ((x * x) * \n    ((1 * x) + (x * 1))))) + ((((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * (x * x)) - (((x + 2) * \n    (x - 3)) * ((1 * x) + (x * 1)))) * ((((((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0))) * (x * x)) + \n    (((1 * x) + (x * 1)) * ((1 * x) + (x * 1)))) + ((((1 * x) + (x * 1)) * ((1 * x) + (x * 1))) + \n    ((x * x) * (((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0))))))))) * (((x * x) * (x * x)) * ((x * x) * \n    (x * x)))) - ((((((((((0 + 0) * (x - 3)) + ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + \n    ((x + 2) * (0 - 0)))) * (x * x)) + ((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + \n    (x * 1)))) - (((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + (x * 1))) + (((x + 2) * \n    (x - 3)) * (((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0)))))) * ((x * x) * (x * x))) - ((((((1 + 0) * \n    (x - 3)) + ((x + 2) * (1 - 0))) * (x * x)) - (((x + 2) * (x - 3)) * ((1 * x) + (x * 1)))) * \n    ((((1 * x) + (x * 1)) * (x * x)) + ((x * x) * ((1 * x) + (x * 1)))))) * ((((((1 * x) + (x * 1)) * \n    (x * x)) + ((x * x) * ((1 * x) + (x * 1)))) * ((x * x) * (x * x))) + (((x * x) * (x * x)) * \n    ((((1 * x) + (x * 1)) * (x * x)) + ((x * x) * ((1 * x) + (x * 1)))))))) / ((((x * x) * (x * x)) * \n    ((x * x) * (x * x))) * (((x * x) * (x * x)) * ((x * x) * (x * x)))))",
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "Into ones which are much simpler:  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<CodeBlock
+				block={{
+					language: "python",
+					content: ">>> (((((((((2.0 * (x + x)) + ((2.0 * (x + x)) + (((x - 3) + (x + 2)) * 2.0))) - (((2.0 * (x + x)) +\n    (((x - 3) + (x + 2)) * 2.0)) + (((x - 3) + (x + 2)) * 2.0))) * ((x * x) * (x * x))) + ((((2.0 *\n    (x * x)) + (((x - 3) + (x + 2)) * (x + x))) - ((((x - 3) + (x + 2)) * (x + x)) + (((x + 2) *\n    (x - 3)) * 2.0))) * (((x + x) * (x * x)) + ((x * x) * (x + x))))) - (((((2.0 * (x * x)) +\n    (((x - 3) + (x + 2)) * (x + x))) - ((((x - 3) + (x + 2)) * (x + x)) + (((x + 2) * (x - 3)) * 2.0))) *\n    (((x + x) * (x * x)) + ((x * x) * (x + x)))) + (((((x - 3) + (x + 2)) * (x * x)) - (((x + 2) *\n    (x - 3)) * (x + x))) * (((2.0 * (x * x)) + ((x + x) * (x + x))) + (((x + x) * (x + x)) +\n    ((x * x) * 2.0)))))) * (((x * x) * (x * x)) * ((x * x) * (x * x)))) - ((((((2.0 * (x * x)) +\n    (((x - 3) + (x + 2)) * (x + x))) - ((((x - 3) + (x + 2)) * (x + x)) + (((x + 2) * (x - 3)) * 2.0))) *\n    ((x * x) * (x * x))) - (((((x - 3) + (x + 2)) * (x * x)) - (((x + 2) * (x - 3)) * (x + x))) *\n    (((x + x) * (x * x)) + ((x * x) * (x + x))))) * (((((x + x) * (x * x)) + ((x * x) * (x + x))) *\n    ((x * x) * (x * x))) + (((x * x) * (x * x)) * (((x + x) * (x * x)) + ((x * x) * (x + x))))))) /\n    ((((x * x) * (x * x)) * ((x * x) * (x * x))) * (((x * x) * (x * x)) * ((x * x) * (x * x)))))",
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "Well, maybe not by much but it definitely goes a long way 😅  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "There's definitely a lot more you could do to get these terms to condense. For now I'm going to stop here but I'll leave a couple of rules that keen readers can implement. I'll cover these a larger set of operator types in a future post.  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$f + f \\rightarrow{} 2 \\times f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$(a \\times f) + (b \\times f) \\rightarrow compute(a + b) \\times f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$-(-f) \\rightarrow f$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "$\\frac{a \\times f}{b \\times g} \\rightarrow compute(a / b) \\times \\frac{f}{g}$  ",
+					id: _.uniqueId(),
+				}}
+			/>
+			<TextBlock
+				block={{
+					content: "***Hope you learned something, and see you next time. Feel free to email me if you have any questions : )***  ",
+					id: _.uniqueId(),
+				}}
 			/>
 			<p style={{ textAlign: "center", padding: "2rem"}}>
-				Last Updated {"2024-03-07"}
+				Last Updated {"2024-03-14"}
 			</p>
 		</div>
 	);

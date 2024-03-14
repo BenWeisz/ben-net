@@ -374,7 +374,7 @@ now introduce a set of reduction rules that map some complex terms in our formal
 for differentiation, our reduction rules here have corresponding implementations in our symbolic differentiator. Let's take a look at a few
 of these rules which may be familiar.
 
-Let $a, b \in \mathcal{L}$ be constants and $f \in \mathcal{L}$ be compound term.
+Let $a, b \in \mathcal{L}$ be constants and $f, g \in \mathcal{L}$ be compound term.
 
 $0 + f \rightarrow{} f$
 
@@ -383,6 +383,8 @@ $f + 0 \rightarrow{} f$
 $f - 0 \rightarrow{} f$
 
 $0 - f \rightarrow{} -f$
+
+$f - f \rightarrow 0$
 
 $0 \times f \rightarrow{} 0$
 
@@ -412,7 +414,7 @@ Some of these I've listed, but they would result in an error if you actually com
 dividing by zero has no meaning. When we encounter such a simplification we will print a warning message
 to the user and return the same term as its simplification.
 
-We also won't be simplifying terms where one term is divided by the same term. This would patch over a
+We also won't be simplifying terms where a sub term is divided by the same subterm. This would patch over
 discontinuities when the denominator is 0 and the derivative doesn't exist.
 
 We'll call our function `simp`, being short for simplify but also just because : ) `simp` will again involve
@@ -424,10 +426,137 @@ A key note about some of the simplification rules that we dfine above. You'll no
 are symmetric: having the same result when we swap the arguments in our simplification rule. We'll have to 
 handle both of the case if we want to get nicely simplified terms. After implementing all the simplification
 rules we add a catch-all statment in case we can't simplify the current term. In this case we'll simplify the
-sib terms and return a new term with the current term's type and the simplified arguments.
+sub terms and return a new term with the current term's type and the simplified arguments.
 
 ```python
 class Term:
+    ...
+    def simp(self):
+        """ Simplify this Term if possible. """        
+        if self.type == TermType.CONST:
+            return self
+        elif self.type == TermType.VAR:
+            return self
+        
+        simp_args = [arg.simp() for arg in self.args]
+        simp_types = [arg.type for arg in simp_args]
+        simp_values = [float(simp_args[i].args[0]) if simp_types[i] == TermType.CONST else simp_args[i] for i in range(len(simp_args))]
+
+        if self.type == TermType.ADD:
+            if simp_types[0] == TermType.CONST and simp_types[1] == TermType.CONST:
+                return Term(TermType.CONST, [str(simp_values[0] + simp_values[1])])
+            elif simp_types[0] == TermType.CONST and simp_values[0] == 0:
+                return simp_args[1]
+            elif simp_types[1] == TermType.CONST and simp_values[1] == 0:
+                return simp_args[0]
+        elif self.type == TermType.SUB:
+            if simp_types[0] == TermType.CONST and simp_types[1] == TermType.CONST:
+                return Term(TermType.CONST, [str(simp_values[0] - simp_values[1])])
+            elif simp_types[0] == TermType.CONST and simp_values[0] == 0:
+                return Term(TermType.NEG, [simp_args[1]])
+            elif simp_types[1] == TermType.CONST and simp_values[1] == 0:
+                return simp_args[0]
+            elif str(simp_args[0]) == str(simp_args[1]):
+                return Term(TermType.CONST, ["0"])
+        elif self.type == TermType.MUL:
+            if simp_types[0] == TermType.CONST and simp_types[1] == TermType.CONST:
+                return Term(TermType.CONST, [str(simp_values[0] * simp_values[1])])
+            elif simp_types[0] == TermType.CONST:
+                if simp_values[0] == 0:
+                    return Term(TermType.CONST, ["0"])
+                elif simp_values[0] == 1:
+                    return simp_args[1]
+            elif simp_types[1] == TermType.CONST:
+                if simp_values[1] == 0:
+                    return Term(TermType.CONST, ["0"])
+                elif simp_values[1] == 1:
+                    return simp_args[0]
+        elif self.type == TermType.DIV:
+            if simp_types[0] == TermType.CONST and simp_types[1] == TermType.CONST:
+                if simp_values[1] != 0:
+                    return Term(TermType.CONST, [str(simp_values[0] / simp_values[1])])
+                # Return handled by catch-all
+                print("Warning: Constant-Constant division by zero.")
+            elif simp_types[0] == TermType.CONST and simp_values[0] == 0:
+                return Term(TermType.CONST, ["0"])
+            elif simp_types[1] == TermType.CONST:
+                if simp_values[1] == 0:
+                    print("Warning: Constant-Term division by zero.")
+                elif simp_values[1] == 1:
+                    return simp_args[0]
+            elif str(simp_args[0]) == str(simp_args[1]):
+                print(f"Warning: Not simplifying discontinuity @ 0={simp_args[0]}")
+                
+        return Term(self.type, simp_args)
 ```
 
--Conclusion-
+This certainly goes a long way from turning `Term`'s like:
+
+```python
+>>> (((((((((((((((0 + 0) * (x - 3)) + ((0 + 0) * (1 - 0))) + (((0 + 0) * (1 - 0)) + 
+    ((1 + 0) * (0 - 0)))) + ((((0 + 0) * (1 - 0)) + ((1 + 0) * (0 - 0))) + (((1 + 0) * 
+    (0 - 0)) + ((x + 2) * (0 - 0))))) * (x * x)) + (((((0 + 0) * (x - 3)) + ((1 + 0) * (1 - 0))) + 
+    (((1 + 0) * (1 - 0)) + ((x + 2) * (0 - 0)))) * ((1 * x) + (x * 1)))) + ((((((0 + 0) * (x - 3)) + 
+    ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + ((x + 2) * (0 - 0)))) * ((1 * x) + (x * 1))) + 
+    ((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * (((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0)))))) - 
+    (((((((0 + 0) * (x - 3)) + ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + ((x + 2) * (0 - 0)))) * 
+    ((1 * x) + (x * 1))) + ((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * (((0 * x) + (1 * 1)) + 
+    ((1 * 1) + (x * 0))))) + (((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * (((0 * x) + (1 * 1)) + 
+    ((1 * 1) + (x * 0)))) + (((x + 2) * (x - 3)) * ((((0 * x) + (0 * 1)) + ((0 * 1) + (1 * 0))) + 
+    (((0 * 1) + (1 * 0)) + ((1 * 0) + (x * 0)))))))) * ((x * x) * (x * x))) + ((((((((0 + 0) * (x - 3)) + 
+    ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + ((x + 2) * (0 - 0)))) * (x * x)) + ((((1 + 0) * 
+    (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + (x * 1)))) - (((((1 + 0) * (x - 3)) + ((x + 2) * 
+    (1 - 0))) * ((1 * x) + (x * 1))) + (((x + 2) * (x - 3)) * (((0 * x) + (1 * 1)) + ((1 * 1) + 
+    (x * 0)))))) * ((((1 * x) + (x * 1)) * (x * x)) + ((x * x) * ((1 * x) + (x * 1)))))) - 
+    (((((((((0 + 0) * (x - 3)) + ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + ((x + 2) * 
+    (0 - 0)))) * (x * x)) + ((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + (x * 1)))) - 
+    (((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + (x * 1))) + (((x + 2) * (x - 3)) * 
+    (((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0)))))) * ((((1 * x) + (x * 1)) * (x * x)) + ((x * x) * 
+    ((1 * x) + (x * 1))))) + ((((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * (x * x)) - (((x + 2) * 
+    (x - 3)) * ((1 * x) + (x * 1)))) * ((((((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0))) * (x * x)) + 
+    (((1 * x) + (x * 1)) * ((1 * x) + (x * 1)))) + ((((1 * x) + (x * 1)) * ((1 * x) + (x * 1))) + 
+    ((x * x) * (((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0))))))))) * (((x * x) * (x * x)) * ((x * x) * 
+    (x * x)))) - ((((((((((0 + 0) * (x - 3)) + ((1 + 0) * (1 - 0))) + (((1 + 0) * (1 - 0)) + 
+    ((x + 2) * (0 - 0)))) * (x * x)) + ((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + 
+    (x * 1)))) - (((((1 + 0) * (x - 3)) + ((x + 2) * (1 - 0))) * ((1 * x) + (x * 1))) + (((x + 2) * 
+    (x - 3)) * (((0 * x) + (1 * 1)) + ((1 * 1) + (x * 0)))))) * ((x * x) * (x * x))) - ((((((1 + 0) * 
+    (x - 3)) + ((x + 2) * (1 - 0))) * (x * x)) - (((x + 2) * (x - 3)) * ((1 * x) + (x * 1)))) * 
+    ((((1 * x) + (x * 1)) * (x * x)) + ((x * x) * ((1 * x) + (x * 1)))))) * ((((((1 * x) + (x * 1)) * 
+    (x * x)) + ((x * x) * ((1 * x) + (x * 1)))) * ((x * x) * (x * x))) + (((x * x) * (x * x)) * 
+    ((((1 * x) + (x * 1)) * (x * x)) + ((x * x) * ((1 * x) + (x * 1)))))))) / ((((x * x) * (x * x)) * 
+    ((x * x) * (x * x))) * (((x * x) * (x * x)) * ((x * x) * (x * x)))))
+```
+
+Into ones which are much simpler:
+
+```python
+>>> (((((((((2.0 * (x + x)) + ((2.0 * (x + x)) + (((x - 3) + (x + 2)) * 2.0))) - (((2.0 * (x + x)) +
+    (((x - 3) + (x + 2)) * 2.0)) + (((x - 3) + (x + 2)) * 2.0))) * ((x * x) * (x * x))) + ((((2.0 *
+    (x * x)) + (((x - 3) + (x + 2)) * (x + x))) - ((((x - 3) + (x + 2)) * (x + x)) + (((x + 2) *
+    (x - 3)) * 2.0))) * (((x + x) * (x * x)) + ((x * x) * (x + x))))) - (((((2.0 * (x * x)) +
+    (((x - 3) + (x + 2)) * (x + x))) - ((((x - 3) + (x + 2)) * (x + x)) + (((x + 2) * (x - 3)) * 2.0))) *
+    (((x + x) * (x * x)) + ((x * x) * (x + x)))) + (((((x - 3) + (x + 2)) * (x * x)) - (((x + 2) *
+    (x - 3)) * (x + x))) * (((2.0 * (x * x)) + ((x + x) * (x + x))) + (((x + x) * (x + x)) +
+    ((x * x) * 2.0)))))) * (((x * x) * (x * x)) * ((x * x) * (x * x)))) - ((((((2.0 * (x * x)) +
+    (((x - 3) + (x + 2)) * (x + x))) - ((((x - 3) + (x + 2)) * (x + x)) + (((x + 2) * (x - 3)) * 2.0))) *
+    ((x * x) * (x * x))) - (((((x - 3) + (x + 2)) * (x * x)) - (((x + 2) * (x - 3)) * (x + x))) *
+    (((x + x) * (x * x)) + ((x * x) * (x + x))))) * (((((x + x) * (x * x)) + ((x * x) * (x + x))) *
+    ((x * x) * (x * x))) + (((x * x) * (x * x)) * (((x + x) * (x * x)) + ((x * x) * (x + x))))))) /
+    ((((x * x) * (x * x)) * ((x * x) * (x * x))) * (((x * x) * (x * x)) * ((x * x) * (x * x)))))
+```
+
+Well, maybe not by much but it definitely goes a long way 😅
+
+There's definitely a lot more you could do to get these terms to condense. For now I'm going to stop here
+but I'll leave a couple of rules that keen readers can implement. I'll cover these a larger set of operator types
+in a future post.
+
+$f + f \rightarrow{} 2 \times f$
+
+$(a \times f) + (b \times f) \rightarrow compute(a + b) \times f$
+
+$-(-f) \rightarrow f$
+
+$\frac{a \times f}{b \times g} \rightarrow compute(a / b) \times \frac{f}{g}$
+
+***Hope you learned something, and see you next time. Feel free to email me if you have any questions : )***
