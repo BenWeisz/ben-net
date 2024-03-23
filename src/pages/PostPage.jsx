@@ -1,6 +1,7 @@
 import React from "react"
 import DesigningABlogSitePage from "./DesigningABlogSitePage";
 import SymbolicDifferentiationPartPage from "./SymbolicDifferentiationPartPage";
+import BenSBooksPage from "./BenSBooksPage";
 import { useLocation } from "react-router-dom";
 
 import "../index.css";
@@ -13,6 +14,7 @@ const PostPage = () => {
   const pages = {
     "/designing-a-blog-site": <DesigningABlogSitePage/>,
     "/symbolic-differentiation-part-1": <SymbolicDifferentiationPartPage/>,
+    "/bens-books": <BenSBooksPage/>,
   };
 
   const choosePage = () => {

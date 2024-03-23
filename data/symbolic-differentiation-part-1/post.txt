@@ -548,7 +548,7 @@ Into ones which are much simpler:
 Well, maybe not by much but it definitely goes a long way 😅
 
 There's definitely a lot more you could do to get these terms to condense. For now I'm going to stop here
-but I'll leave a couple of rules that keen readers can implement. I'll cover these a larger set of operator types
+but I'll leave a couple of rules that keen readers can implement. I'll cover these and a larger set of operator types
 in a future post.
 
 $f + f \rightarrow{} 2 \times f$

@@ -845,7 +845,7 @@ const SymbolicDifferentiationPartPage = () => {
 			/>
 			<TextBlock
 				block={{
-					content: "There's definitely a lot more you could do to get these terms to condense. For now I'm going to stop here but I'll leave a couple of rules that keen readers can implement. I'll cover these a larger set of operator types in a future post.  ",
+					content: "There's definitely a lot more you could do to get these terms to condense. For now I'm going to stop here but I'll leave a couple of rules that keen readers can implement. I'll cover these and a larger set of operator types in a future post.  ",
 					id: _.uniqueId(),
 				}}
 			/>
